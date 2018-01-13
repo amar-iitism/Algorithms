@@ -1,0 +1,111 @@
+#include<bits/stdc++.h>
+using namespace std;
+vector<int> v[11];
+vector<pair<int,int> > vt;
+int low[11],vis[11],disc[11],p[11];
+int  ap[11];
+
+int n,m;
+void inti()
+{
+  memset(p,-1,sizeof(p));
+  memset(vis,0,sizeof(vis));
+  memset(low,0,sizeof(low));
+  memset(disc,0,sizeof(disc));
+ memset(ap,0,sizeof(ap));
+
+}
+
+void dfs_ap(int x,int time)
+{
+  vis[x]=1;
+  disc[x]=low[x]=time+1;
+  int child=0;
+  for(int i=0;i<v[x].size();i++)
+  {
+    int y=v[x][i];
+    if(vis[y]==0)
+    {
+      child++;
+      vis[y]=1;
+      p[y]=x;
+      dfs_ap(y,time+1);
+      low[x]=min(low[x],low[y]);
+      if(p[x]==-1 && child>1)
+      ap[x]=1;
+      if(p[x]!=-1 && low[y]>=disc[x])
+      ap[x]=1;
+    }
+    else if(p[x]!=y)
+    {
+     low[x]=min(low[x],disc[y]);
+    }
+  }
+}
+
+void dfs_b(int x,int time)
+{
+  vis[x]=1;
+  disc[x]=low[x]=time+1;
+  for(int i=0;i<v[x].size();i++)
+  {
+    int y=v[x][i];
+    if(vis[y]==0)
+    {
+      vis[y]=1;
+      p[y]=x;
+      dfs_b(y,time+1);
+      low[x]=min(low[x],low[y]);
+      if(low[y]>disc[x])
+      vt.push_back({min(x,y),max(x,y)});
+    }
+    else if(p[x]!=y)
+    {
+     low[x]=min(low[x],disc[y]);
+    }
+  }
+}
+
+
+void articulation_points()
+{
+  dfs_ap(0,0);
+  int ans=0;
+  for(int i=0;i<n;i++)
+    if(ap[i]==1)
+    ans++;
+  cout<<ans<<endl;
+  for(int i=0;i<n;i++)
+  {
+      if(ap[i]==1)
+       cout<<i<<" ";
+  }
+  cout<<endl;
+}
+
+void bridges()
+{ dfs_b(0,0);
+  int kt=vt.size();
+  cout<<kt<<endl;
+  sort(vt.begin(),vt.end());
+  for(int i=0;i<kt;i++)
+  cout<<vt[i].first<<" "<<vt[i].second<<endl;
+  cout<<endl;
+  return ;
+}
+
+int main()
+{
+ cin>>n>>m;
+ for(int i=0;i<m;i++)
+ {
+  int a,b;
+  cin>>a>>b;
+  v[a].push_back(b);
+  v[b].push_back(a);
+ }
+ inti();
+ articulation_points();
+ inti();
+ bridges();
+}
