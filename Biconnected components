@@ -1,0 +1,93 @@
+#include<bits/stdc++.h>
+using namespace std;
+int dis[11],low[11],vis[11],p[11];
+vector<int> v[11];
+int n,m;
+stack<pair<int,int> > s;
+void inti()
+{
+  while(!s.empty())
+    s.pop();
+  memset(p,-1,sizeof(p));
+  memset(dis,0,sizeof(dis));
+  memset(low,0,sizeof(low));
+  memset(vis,0,sizeof(vis));
+  for(int i=0;i<11;i++)
+  v[i].clear();
+}
+
+void dfs_bc(int x,int time)
+{
+  vis[x]=1;
+  int child=0;
+  dis[x]=low[x]=time+1;
+  for(int i=0;i<v[x].size();i++)
+  {
+   int y=v[x][i];
+   if(vis[y]==0)
+   {
+    child++;
+    vis[y]=1;
+    p[y]=x;
+    s.push({x,y});
+    dfs_bc(y,time+1);
+    low[x]=min(low[x],low[y]);
+    if(p[x]==-1 && child>1)
+    {
+     while( (s.top().first!=x )&& (s.top().second=!y) )
+     {
+      cout<<s.top().first<<" "<<s.top().second<<endl;
+      s.pop();
+     }
+     cout<<s.top().first<<" "<<s.top().second<<endl<<endl;
+     s.pop();
+    }
+    if(p[x]!=-1 && low[y]>=dis[x])
+    {
+     while(s.top().first!=x && s.top().second!=y )
+     {
+      cout<<s.top().first<<" "<<s.top().second<<endl;
+      s.pop();
+     }
+     cout<<s.top().first<<" "<<s.top().second<<endl<<endl;
+     s.pop();
+    }
+   }
+   else if(p[x]!=y && low[x]>dis[y] )
+   {
+     low[x]=dis[y];
+     s.push({x,y});
+   }
+  }
+}
+
+void biconnected_components()
+{ for(int i=0;i<n;i++)
+  {if(vis[i]==0)
+  {dfs_bc(i,0);
+  int cnt=0;
+  while(!s.empty())
+  {
+   int a=s.top().first;
+   int b=s.top().second;
+   cout<<a<<" "<<b<<endl;
+   cnt++;
+   s.pop();
+  }
+  }
+}
+  cout<<endl<<endl;
+}
+
+int main()
+{
+  cin>>n>>m;
+  for(int i=0;i<m;i++)
+  {
+   int a,b;
+   cin>>a>>b;
+   v[a].push_back(b);
+   v[b].push_back(a);
+  }
+  biconnected_components();
+}
