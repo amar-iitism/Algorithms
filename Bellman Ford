@@ -1,0 +1,47 @@
+#include<bits/stdc++.h>
+using namespace std;
+int n,m,s;
+int dis[100007];
+vector<pair<int,pair<int,int> > > v;
+void bellman_ford(int s)
+{
+  for(int i=0;i<100007;i++)
+  {
+    dis[i]=1000000009;
+  }
+  dis[s]=0;
+  for(int i=1;i<=n-1;i++)
+  {
+    for(int j=0;j<v.size();j++)
+    {
+     int a=v[j].first;
+     int b=v[j].second.first;
+     int cost=v[j].second.second;
+     if(dis[a]!=1000000009 && dis[a]+cost<dis[b])
+     dis[b]=dis[a]+cost;
+    }
+  }
+  for(int j=0;j<v.size();j++)
+  {
+     int a=v[j].first;
+     int b=v[j].second.first;
+     int cost=v[j].second.second;
+     if(dis[a]!=1000000009 && dis[a]+cost<dis[b])
+     {cout<<"Graph has negative cycle"<<endl;
+     break;}
+  }
+  for(int i=1;i<=n;i++)
+  cout<<i<<" "<<dis[i]<<endl;
+}
+
+int main()
+{
+  cin>>n>>m>>s;
+  for(int i=0;i<m;i++)
+  {
+   int a,b,c;
+   cin>>a>>b>>c;
+   v.push_back({a,{b,c}});
+  }
+  bellman_ford(s);
+}
