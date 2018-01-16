@@ -1,1 +1,49 @@
+#include<bits/stdc++.h>
+using namespace std;
+vector<int> v[100007],vt;
+int n,m;
+int indeg[100007];
+set<int> s;
+int cnt=0;
+void topological_sort()
+{
+  while(!s.empty())
+  {
+   int x=*s.begin();
+   s.erase(s.begin());
+   vt.push_back(x);
+   cnt++;
+   for(int i=0;i<v[x].size();i++)
+   {
+    int y=v[x][i];
+    indeg[y]--;
+    if(indeg[y]==0)
+    s.insert(y);
+   }
+  }
+}
 
+
+int main()
+{
+ memset(indeg,0,sizeof(indeg));
+ scanf("%d%d",&n,&m);
+ for(int i=0;i<m;i++)
+ {
+   int a,b;
+   scanf("%d%d",&a,&b);
+   v[a].push_back(b);
+   indeg[b]++;
+ }
+ for(int i=1;i<=n;i++)
+ {
+  if(indeg[i]==0)
+  s.insert(i);
+ }
+ topological_sort();
+ if(cnt!=n){puts("Sandro fails.");return  0;}
+  printf("%d", vt[0]);
+  for(int i=1; i<n; i++) printf(" %d", vt[i]);
+  printf("\n");
+  return 0;
+}
