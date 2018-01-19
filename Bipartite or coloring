@@ -1,0 +1,114 @@
+#include<bits/stdc++.h>
+using namespace std;
+vector<int> v[1000007];
+int color[1000007];
+
+int  dfs(int x)
+{
+  //vis[x]=1;
+  for(int i=0;i<v[x].size();i++)
+  {
+   int y=v[x][i];
+   if(color[y]==-1)
+   { color[y]=color[x]^1;
+     int z=dfs(y);
+     if(z==0)
+     return 0;
+   }
+   else
+   {
+    if(color[y]!=color[x]^1)
+    return 0;
+   }
+  }
+  return 1;
+}
+
+int main()
+{
+  int t;
+  cin>>t;
+  int k=1;
+  while(t--)
+  {
+   int n,m;
+   cin>>n>>m;
+   for(int i=0;i<1000007;i++)
+   {v[i].clear();
+   color[i]=-1;}
+   for(int i=0;i<m;i++)
+   {
+     int a,b;
+     cin>>a>>b;
+     v[a].push_back(b);
+     v[b].push_back(a);
+   }
+   int flag=0;
+   for(int i=1;i<=n;i++)
+   {
+     if(color[i]==-1)
+     {color[i]=0;
+     int y=dfs(i);
+     if(!y)
+      {
+      flag=1;
+      }
+      if(flag==1)
+     break;
+     }
+
+   }
+    cout<<"Scenario #"<<k<<":"<<endl;
+    if(flag==1)
+    {
+     cout<<"Suspicious bugs found!"<<endl;
+    }
+    else
+    cout<<"No suspicious bugs found!"<<endl;
+    k++;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+// for bfs solution
+/*
+bool isBipartite(Graph& G, int s)  {
+    Color * coloring = new Color[G.V];
+    for (int i = 0; i < G.V; i++)
+        coloring[i] = Uncolored;
+    coloring[s] = Red;
+
+    queue <int> q;
+    q.push(s);
+
+    while (!q.empty())  {
+        int u = q.front();
+        q.pop();
+        for (vector <int>::iterator it = G.adjList[u].begin(); it != G.adjList[u].end(); it++)  {
+            if (coloring[*it] == Uncolored) {
+                coloring[*it] = (coloring[u] == Red) ? Black : Red;
+                q.push(*it);
+            } else if (coloring[*it] == coloring[u])    {
+                delete [] coloring;
+                return false;
+            }
+        }
+    }
+    delete [] coloring;
+    return true;
+}
+
+
+
+
+
+
+*/
