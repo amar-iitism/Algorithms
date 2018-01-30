@@ -1,0 +1,91 @@
+#include<bits/stdc++.h>
+using namespace std;
+string s,p;
+int lps[1000007];
+void lps_cal()
+{
+  int len=0;
+  lps[0]=0;
+  int i=1;
+//  int len=0;
+ // int cnt=0;
+
+  int m=p.length();
+  while(i<m)
+  {
+   if(p[i]==p[len])
+   {
+    len++;
+    lps[i]=len;
+    i++;
+   }
+   else
+   {
+     if(len!=0)
+     {
+      len=lps[len-1];
+     }
+     else
+     {
+      lps[i]=0;
+      i++;
+     }
+   }
+  }
+}
+
+void kmp()
+{
+  int n=s.length();
+  int m=p.length();
+  //int lps[m];
+  lps_cal();
+  int i=0;
+  int j=0;
+  int cnt=0;
+  vector<int> v;
+  while(i<n)
+  {
+   if(p[j]==s[i])
+   {
+    i++;
+    j++;
+   }
+   if(j==m)
+   {
+    cnt++;
+    v.push_back(i-m+1);
+    j=lps[j-1];
+   }
+   else if(i<n && p[j]!=s[i])
+   {
+    if(j!=0)
+    j=lps[j-1];
+    else
+    i++;
+   }
+  }
+  if(cnt==0)
+  cout<<"Not Found"<<endl;
+  else
+  {
+   cout<<cnt<<endl;
+   for(int i=0;i<v.size();i++)
+   cout<<v[i]<<" ";
+   cout<<endl;
+  }
+
+}
+
+int main()
+{
+  int t;
+  cin>>t;
+  while(t--)
+  {
+   cin>>s>>p;
+   //cout<<"s="<<s<<" p="<<p<<endl;
+   kmp();
+   cout<<endl;
+  }
+}
