@@ -1,0 +1,111 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long int
+struct node
+{
+  ll sum;
+};
+node tree[3*100027];
+ll lazy[3*100027];
+
+void build(int index,int low,int high)
+{
+  if(low==high)
+  {
+   tree[index].sum=0;
+   return;
+  }
+  int mid=(low+high)/2;
+  build(2*index+1,low,mid);
+  build(2*index+2,mid+1,high);
+  tree[index].sum=tree[2*index+1].sum+tree[2*index+2].sum;
+}
+
+int query(int index,int low,int high,int left,int right)
+{
+  if(low>high || low>right || high<left)
+  return 0;
+  if(lazy[index]!=0)
+  {
+   int temp=lazy[index];
+   int ch=1;
+   if(temp%2==0)
+   ch=0;
+   if(ch==1)
+   {
+    tree[index].sum=abs((high-low+1)-tree[index].sum);
+   }
+   if(low!=high)
+   {
+    lazy[2*index+1]+=temp;
+    lazy[2*index+2]+=temp;
+   }
+   lazy[index]=0;
+  }
+  if(low>=left && high<=right)
+  return tree[index].sum;
+  int mid=(low+high)/2;
+  int p1=query(2*index+1,low,mid,left,right);
+  int p2=query(2*index+2,mid+1,high,left,right);
+  return p1+p2;
+}
+
+void update(int index,int low,int high,int left,int right)
+{
+  if(lazy[index]!=0)
+  {
+   int temp=lazy[index];
+   int ch=1;
+   if(temp%2==0)
+   ch=0;
+   if(ch==1)
+   {
+    tree[index].sum=abs((high-low+1)-tree[index].sum);
+   }
+   if(low!=high)
+   {
+    lazy[2*index+1]+=temp;
+    lazy[2*index+2]+=temp;
+   }
+   lazy[index]=0;
+  }
+  if(low>high || low>right || high<left)
+  return;
+  if(low>=left && high<=right)
+  {
+   tree[index].sum=abs((high-low+1)-tree[index].sum);
+   if(low!=high)
+   {
+    lazy[2*index+1]+=1;
+    lazy[2*index+2]+=1;
+   }
+   return;
+  }
+  int mid=(low+high)/2;
+  update(2*index+1,low,mid,left,right);
+  update(2*index+2,mid+1,high,left,right);
+  tree[index].sum=tree[2*index+1].sum+tree[2*index+2].sum;
+}
+
+int main()
+{
+  int n,q;
+  scanf("%d%d",&n,&q);
+  memset(lazy,0,sizeof(lazy));
+  while(q--)
+  { int k;
+  scanf("%d",&k);
+   int l,r;
+   scanf("%d%d",&l,&r);
+   if(k==0)
+   {
+      update(0,0,n-1,l-1,r-1);
+   }
+   else
+   {   int ans=0;
+      ans=query(0,0,n-1,l-1,r-1);
+       printf("%d\n",ans);
+   }
+  }
+  return 0;
+}
