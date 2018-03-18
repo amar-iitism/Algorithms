@@ -1,0 +1,90 @@
+//function f(n)=3*(f(n-1)+f(n-2));
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define MOD 1000000007
+#define ll long long int
+
+void mat_multi(ll c[][2],ll a[][2],ll b[][2])
+{
+   for(int i=0;i<2;i++)
+   {
+       for(int j=0;j<2;j++)
+       {    c[i][j]=0;
+           for(int k=0;k<2;k++)
+           {
+               c[i][j]=(c[i][j]+(a[i][k]*b[k][j]));
+           }
+       }
+   }
+    return;
+}
+
+void copy(ll a[][2],ll b[][2])
+{
+    for(int i=0;i<2;i++)
+    {
+        for(int j=0;j<2;j++)
+        {
+            a[i][j]=b[i][j];
+        }
+    }
+    return;
+}
+
+void matmod(ll c[][2]){
+	ll i,j;
+	for(i=0;i<2;i++){
+		for(j=0;j<2;j++){
+			c[i][j]=c[i][j]%MOD;
+		}
+	}
+	return;
+}
+
+
+void powermat(ll ans[][2],ll a[][2],ll n)
+{
+    ll temp[2][2];
+    while(n)
+    {
+        if(n&1)
+        {
+            mat_multi(temp,ans,a);
+            matmod(temp);
+            copy(ans,temp);
+        }
+        n>>=1;
+        mat_multi(temp,a,a);
+        matmod(temp);
+        copy(a,temp);
+    }
+    return;
+}
+
+
+
+
+int main()
+{
+    ll n,t;
+    cin>>t;
+    while(t--)
+    {
+        cin>>n;
+        if(n==1)
+            cout<<"4"<<"\n";
+        else if(n==2)
+            cout<<"15"<<"\n";
+        else
+        {
+        ll ans[][2]={{1,0},{0,1}};
+        ll a[][2]={{3,3},{1,0}};
+        powermat(ans,a,n-2);
+        ll cnt=((ans[0][0]*15)+(ans[0][1]*4))%MOD;
+        cout<<cnt<<endl;
+        }
+    }
+    return 0;
+}
