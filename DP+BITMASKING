@@ -1,0 +1,52 @@
+ //find the optimal order of arrangement in which the cost is minimum.
+ //If in the final order we have some H1, H2, ... Hn, the cost = GCD(H1, H2)+GCD(H2, H3)+....+GCD(Hn-1, Hn)+Hn.
+ 
+ #include<bits/stdc++.h>
+using namespace std;
+#define ll long long int
+int n;
+int h[20];
+ll dp[1<<20][20];
+int allmask;
+int G[20][20];
+ll solve(int bitmask,int ind2)
+{
+    if(bitmask==allmask)
+    { return 0;}
+    if(dp[bitmask][ind2]!=-1)
+    { return dp[bitmask][ind2];}
+    ll kdt=10e9;
+    for(int i=0;i<n;i++)
+    {
+        if(bitmask & (1<<i))
+            continue;
+        kdt=min(kdt,solve(bitmask | (1<<i),i)+G[ind2][i]);
+    }
+    return dp[bitmask][ind2]=kdt;
+}
+
+
+int main()
+{
+    cin>>n;
+    for(int i=0;i<n;i++)
+        cin>>h[i];
+    allmask=(1<<n)-1;
+   ll ans=1e9;
+    memset(dp,-1,sizeof(dp));
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = 0; j < n; j++)
+            G[i][j] = __gcd(h[i], h[j]);
+    }
+    int bitmask=0;
+    for(int i=0;i<n;i++)
+    {
+        ll tsum=0;
+        tsum+=h[i];
+        tsum+=solve(bitmask | (1<<i),i);
+        ans=min(ans,tsum);
+    }
+    cout<<ans<<endl;
+    return 0;
+}
