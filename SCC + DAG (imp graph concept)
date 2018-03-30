@@ -1,0 +1,99 @@
+/*
+There is a country composed of N cities named as 1, 2, 3, ..., N. Cities are connected to each other by E directed roads.
+How many minimum number of new hospitals do they need to open such that from every city,it is possible to reach at least one new hospital. 
+
+
+Find the SCC's of the directed graph form by the cities as nodes and roads are directed edges.
+Construct the DAG of SCC(s) (assuming each SCC as a node).
+Number of nodes (in the DAG of SCC(s)) with out degree equal to zero is the required answer.
+
+*/
+
+#include<bits/stdc++.h>
+using namespace std;
+int n,m;
+int nodecc[100007];
+vector<int> v[100007],vr[100007];
+int vis[100007];
+int c;
+stack<int> s;
+  int cnt=0;
+void dfs1(int x)
+{
+    vis[x]=1;
+    for(int i=0;i<v[x].size();i++)
+    {
+        int y=v[x][i];
+        if(vis[y]==0)
+            dfs1(y);
+    }
+    s.push(x);
+}
+
+void dfs2(int x)
+{
+    vis[x]=1;
+    nodecc[x]=c;
+   // cout<<x<<" ";
+    for(int i=0;i<vr[x].size();i++)
+    {
+        int y=vr[x][i];
+        if(vis[y]==0)
+            dfs2(y);
+    }
+}
+
+
+void kosaraju_scc()
+{
+    memset(vis,0,sizeof(vis));
+    for(int i=1;i<=n;i++)
+    {
+        if(vis[i]==0)
+            dfs1(i);
+    }
+    memset(vis,0,sizeof(vis));
+    c=0;
+    while(!s.empty())
+    {   
+        int x=s.top();
+        s.pop();
+        if(vis[x]==0)
+        {   c++;
+            dfs2(x);
+           // cout<<endl;
+               cnt++;
+        }
+    }
+    //cout<<cnt<<endl;
+}
+
+
+int main()
+{
+    cin>>n>>m;
+    for(int i=0;i<m;i++)
+    {
+        int a,b;
+        cin>>a>>b;
+        v[a].push_back(b);
+        vr[b].push_back(a);
+    }
+    kosaraju_scc();
+    vector<int> x(c+1,0);
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=0;j<v[i].size();j++)
+        {   int y=v[i][j];
+            if(nodecc[i]!=nodecc[y])
+                x[nodecc[i]]=1;
+        }
+    }
+    int ans=0;
+    for(int i=1;i<=c;i++)
+    {
+        if(x[i]==0)
+            ans++;
+    }
+    cout<<ans<<endl;
+}
