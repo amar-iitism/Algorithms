@@ -1,0 +1,76 @@
+/*
+You are provided with a number N, your task is to compute the size of a set of Fractions which satisfy the following conditions :
+
+1.Fractions are Irreducible.
+
+2.Value of fractions lie in between 0 and 1 (including both).
+
+3.Denominator of fractions should be less than or equal to N.
+
+Remember : Set is a collection of distinct objects.
+
+Input Format
+
+First line of input will contain a number T, denoting number of test cases.
+
+Each of next T lines will contain N.
+
+(1 <= T <= 10^5) & (1 <= N <= 10^6)
+
+//ETF Computation
+	lli i,j;
+	for(i=1;i<MX;i++)
+		ans[i]=i;
+	for(i=2;i<MX;i++){
+		if(ar[i]==false){
+			for(j=i;j<MX;j=j+i){
+				ans[j]=(ans[j]*(i-1))/i;
+				ar[j]=true;
+			}
+		}
+	}
+
+*/
+
+// code
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long int
+ll dp[1000005];
+int arr[1000005];
+void cal()
+{   memset(arr,0,sizeof(arr));
+    for(int i=1;i<1000005;i++)
+        dp[i]=i;
+    dp[1]=2;
+    for(int i=2;i<1000005;i++)
+    {
+        if(arr[i]==0)
+        {
+            for(int j=i;j<1000005;j+=i)
+            {
+                arr[j]=1;
+                dp[j]=(dp[j]*(i-1))/i;
+            }
+        }
+    }
+ for(int i=2;i<1000005;i++)
+     dp[i]+=dp[i-1];
+}
+
+
+int main()
+{
+    int t;
+    cin>>t;
+    cal();
+    while(t--)
+    {
+        int n;
+        cin>>n;
+       cout<<dp[n]<<endl;
+    }
+}
+
+
