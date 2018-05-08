@@ -1,0 +1,10 @@
+while(low<high)
+{
+ int mid=low+(high-low+1)/mid;
+ //calculate required val;
+ if(val<=given_num)
+ low=mid;
+ else
+ high=mid-1;
+}
+cout<<low<<endl;
