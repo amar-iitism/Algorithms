@@ -1,6 +1,6 @@
 while(low<high)
 {
- int mid=low+(high-low+1)/mid;
+ int mid=low+(high-low+1)/2;
  //calculate required val;
  if(val<=given_num)
  low=mid;
