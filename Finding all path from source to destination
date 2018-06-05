@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+int n,m,s,e;
+int vis[100007];
+vector<int> path;
+vector<int> v[100007];
+void print(int x)
+{   vis[x]=1;
+    path.push_back(x);
+    if(x==e)
+    {
+      for(int i=0;i<path.size();i++)
+      cout<<path[i]<<" ";
+      cout<<endl;
+    }
+    else
+    {
+     for(int i=0;i<v[x].size();i++)
+     {
+       int y=v[x][i];
+       if(vis[y]==0)
+       {
+        vis[y]=1;
+        print(y);
+       }
+     }
+    }
+    path.pop_back();
+    vis[x]=0;
+}
+
+
+void printpaths()
+{   path.clear();
+    memset(vis,0,sizeof(vis));
+    int index=0;
+    print(s);
+}
+
+
+int main()
+{
+  cin>>n>>m>>s>>e;
+  for(int i=0;i<m;i++)
+  {
+   int a,b;
+   cin>>a>>b;
+   v[a].push_back(b);
+   v[b].push_back(a);
+  }
+  printpaths();
+}
