@@ -1,0 +1,63 @@
+#include<bits/stdc++.h>
+using namespace std;
+set<int> adj[100007];
+vector<pair<int,int>> edges;
+int n,e,deg[100007];
+int vis[100007];
+void check(int x)
+{
+    vis[x]=1;
+    for(auto e:adj[x])
+    {
+     int vv=x^edges[e].first^edges[e].second;
+     if(!vis[vv])
+     {
+      check(vv);
+     }
+    }
+}
+ 
+void euler_dfs(int v)
+{   while(!adj[v].empty())
+    {
+    int e=(*adj[v].begin());
+    int vv=v^edges[e].first^edges[e].second;
+    if(v!=edges[e].first)
+    swap(edges[e].first,edges[e].second);
+    adj[v].erase(adj[v].begin());
+    adj[vv].erase(e);
+    euler_dfs(vv);
+    }
+}
+ 
+ 
+int main()
+{
+    cin>>n>>e;
+    memset(deg,0,sizeof(deg));
+    for(int i=0;i<e;i++)
+    {
+     int a,b;
+     cin>>a>>b;
+     adj[a].insert(i);
+     adj[b].insert(i);
+     deg[a]++;
+     deg[b]++;
+     edges.push_back({a,b});
+    }
+    memset(vis,0,sizeof(vis));
+    check(1);
+    for(int i=1;i<=n;i++)
+    {
+     if(!vis[i] || deg[i]%2==1)
+     {
+      cout<<"NO"<<endl;
+      return 0;
+     }
+    }
+    euler_dfs(1);
+    cout<<"YES"<<endl;
+    for(int i=0;i<e;i++)
+    cout<<edges[i].first<<" "<<edges[i].second<<endl;
+    return 0;
+}
