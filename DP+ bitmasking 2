@@ -1,0 +1,50 @@
+Leetcode - Shortest Path Visiting All Nodes
+
+
+class Solution {
+public:
+    int shortestPathLength(vector<vector<int>>& graph) {
+        int N=12;
+        int vis[1<<N][N];
+        int n=graph.size();
+        vector<int> v[n];
+        for(int i=0;i<graph.size();i++)
+        {
+         for(int j=0;j<graph[i].size();j++)
+         {   int jt=graph[i][j];
+             v[i].push_back(jt);
+         }
+        }
+        memset(vis,-1,sizeof(vis));
+        queue<pair<int,int>> q;
+        for(int i=0;i<n;i++)
+        {
+            vis[1<<i][i]=0;
+            q.push({1<<i,i});
+        }
+        while(!q.empty())
+        {
+          int mask=q.front().first;
+          int x=q.front().second;
+            q.pop();
+          for(int i=0;i<v[x].size();i++)
+          {
+            int y=v[x][i];
+              int tmask=mask | (1<<y);
+              if(vis[tmask][y]==-1)
+              {
+                  q.push({tmask,y});
+                  vis[tmask][y]=vis[mask][x]+1;
+              }
+          }
+        }
+       int ans=1<<30;
+        for(int i=0;i<n;i++)
+        {
+            if(vis[(1<<n)-1][i]==-1)
+                continue;
+            ans=min(ans,vis[(1<<n)-1][i]);
+        }
+        return ans;
+    }
+};
