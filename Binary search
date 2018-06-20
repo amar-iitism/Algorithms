@@ -1,3 +1,4 @@
+int low=-1;
 while(low<high)
 {
  int mid=low+(high-low+1)/2;
