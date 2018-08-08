@@ -1,0 +1,10 @@
+// for using in vector  
+  
+struct Xgreater
+{
+    bool operator()( const X& lx, const X& rx ) const {
+        return lx.x < rx.x;
+    }
+};
+
+sort( my_vec.begin(), my_vec.end(), Xgreater() );
