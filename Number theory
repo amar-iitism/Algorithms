@@ -1,1 +1,6 @@
   Any number is divisible by 8 when the last 3 digits are divisible by 8. 
+  
+  Divisibility by 11 where you add all the digits at odd places and add
+  all the digits at even places and then subtract one from the other. 
+  
+  
