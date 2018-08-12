@@ -1,0 +1,11 @@
+bool findl(long long int val)
+{   if(val==0)
+    return false;
+    while(val>1)
+    {
+        if(val%5!=0)
+        return false;
+        val=val/5;
+    }
+    return true;
+}
