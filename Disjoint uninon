@@ -1,0 +1,127 @@
+#include<bits/stdc++.h>
+using namespace std;
+int par[20007],sizel[20007];
+
+void intialize()
+{
+  for(int i=0;i<20007;i++)
+  {
+    par[i]=i;
+    sizel[i]=1;
+  }
+}
+
+int root(int x)
+{
+ while(x!=par[x])
+ {
+  par[x]=par[par[x]];
+  x=par[x];
+ }
+ return x;
+}
+
+void unionl(int x,int y)
+{
+  int p=root(x);
+  int q=root(y);
+  if(p==q)
+    return;
+  if(sizel[p]>=sizel[q])
+  {
+    sizel[p]+=sizel[q];
+    par[q]=p;
+  }
+  else
+  {
+    sizel[q]+=sizel[p];
+    par[p]=q;
+  }
+}
+
+int main()
+{
+  int t;
+  cin>>t;
+  while(t--)
+  {
+    int n;
+    cin>>n;
+    intialize();
+    map<int,int> m;
+    vector<pair<int,int>> v;
+    for(int i=0;i<n-1;i++)
+    {
+      int x,y;
+      cin>>x>>y;
+      x--,y--;
+      v.push_back({x,y});
+      m[i]=1;
+    }
+    int q;
+    cin>>q;
+    vector<string> vt;
+    for(int i=0;i<q;i++)
+    {
+      string s1;
+      cin>>s1;
+      if(s1=="R")
+      {
+        int num;
+        cin>>num;
+        num--;
+        m[num]=0;
+        string td=to_string(num);
+        s1=s1+" ";
+        s1+=td;
+      }
+      vt.push_back(s1);
+    }
+    for(int i=0;i<n-1;i++)
+    {
+      if(m[i]==1)
+      {
+        int x=v[i].first;
+        int y=v[i].second;
+        if(root(x)!=root(y))
+        unionl(x,y);
+      }
+    }
+    long long sum=0;
+    int ksize=0;
+    for(int j=0;j<n;j++)
+    {
+    if(par[j]==j)
+    {   sum+=(sizel[j]*ksize);
+              ksize+=sizel[j];
+     }
+    }
+    vector<int>res;
+    for(int i=q-1;i>=0;i--)
+    {
+      string s=vt[i];
+      if(s=="Q")
+      {
+        res.push_back(sum);
+      }
+      else
+      {
+        string st=s.substr(2,s.size()-2);
+        int num=stoi(st);
+        int x=v[num].first;
+        int y=v[num].second;
+        int k1=root(x);
+        int k2=root(y);
+        if(k1!=k2)
+        {
+          sum-=sizel[k1]*sizel[k2];
+          unionl(k1,k2);
+        }
+      }
+    }
+    for(int i=res.size()-1;i>=0;i--)
+    {
+      cout<<res[i]<<endl;
+    }
+  }
+}
